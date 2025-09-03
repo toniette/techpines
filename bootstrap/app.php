@@ -9,6 +9,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -22,7 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (InvalidTransitionException $e) {
-            return response()->json([], 403);
+            return response()->json([], 400);
         });
 
         $exceptions->render(function (SongNotFoundException $e) {
@@ -41,7 +42,14 @@ return Application::configure(basePath: dirname(__DIR__))
             return response()->json([], 401);
         });
 
+        $exceptions->render(function (MethodNotAllowedException $e) {
+            return response()->json([], 405);
+        });
+
         $exceptions->render(function (Throwable $e) {
-            return response()->json([], 500);
+            return response()->json([
+                'message' => $e->getMessage(),
+                'trace' => $e->getTrace(),
+            ], 500);
         });
     })->create();

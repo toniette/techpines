@@ -12,11 +12,12 @@ use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[UseFactory(SongFactory::class)]
 class Song extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $keyType = 'string';
     public $incrementing = false;
@@ -71,6 +72,7 @@ class Song extends Model
             SongSortDirection::ASC => 'asc',
             SongSortDirection::DESC => 'desc',
         };
+
 
         $column = match ($property) {
             SongSortableProperty::CREATED_AT => 'created_at',

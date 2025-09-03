@@ -89,8 +89,8 @@ class EloquentSongRepository implements SongRepository
             key: $cacheKey,
             ttl: new DateInterval('PT10M'),
             callback: fn() => $this->model
-                ->sortedBy($sortBy, $direction)
                 ->filteredBy($filterBy, $filterValue)
+                ->sortedBy($sortBy, $direction)
                 ->paginate(perPage: $perPage, page: $page)
         );
 

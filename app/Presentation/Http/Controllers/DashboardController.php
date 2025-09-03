@@ -14,9 +14,11 @@ use App\Domain\Entity\User;
 use App\Domain\Enum\SongFilterableProperty;
 use App\Domain\Enum\SongSortableProperty;
 use App\Domain\Enum\SongSortDirection;
+use App\Domain\Exception\InvalidSongDataException;
 use App\Domain\ValueObject\YoutubeLink;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Throwable;
 use ValueError;
 
 class DashboardController
@@ -39,13 +41,21 @@ class DashboardController
     public function listSongs()
     {
         try {
+            $page = $this->request->integer('page', 1);
+            $perPage = $this->request->integer('perPage', 10);
+
+            if ($page < 1 || $perPage < 1 || $perPage > 50) {
+                $this->response->setStatusCode(422);
+                return $this->response;
+            }
+
             $params = array_filter([
-                'page' => $this->request->integer('page', 1),
-                'perPage' => $this->request->integer('per_page', 10),
-                'sortBy' => SongSortableProperty::tryFrom($this->request->string('sort_by')),
+                'page' => $page,
+                'perPage' => $perPage,
+                'sortBy' => SongSortableProperty::tryFrom($this->request->string('sortBy')),
                 'direction' => SongSortDirection::tryFrom($this->request->string('direction')),
-                'filterBy' => SongFilterableProperty::tryFrom($this->request->string('filter_by')),
-                'filterValue' => $this->request->string('filter_value')
+                'filterBy' => SongFilterableProperty::tryFrom($this->request->string('filterBy')),
+                'filterValue' => $this->request->string('filterValue')
             ]);
         } catch (ValueError $e) {
             $this->response->setStatusCode(422);
@@ -68,7 +78,7 @@ class DashboardController
 
     public function addSong()
     {
-        $link = new YoutubeLink($this->request->input('link'));
+        $link = new YoutubeLink($this->request->string('link'));
 
         $song = ($this->addSongUseCase)($link);
 
@@ -79,11 +89,16 @@ class DashboardController
 
     public function updateSong(string $id)
     {
-        $data = new SongMetadata(
-            title: $this->request->input('title'),
-            thumbnailUrl: $this->request->input('thumbnail_url'),
-            viewsCount: $this->request->integer('views_count'),
-        );
+        try {
+            $data = new SongMetadata(
+                title: $this->request->string('title'),
+                thumbnailUrl: $this->request->string('thumbnailUrl'),
+                viewsCount: $this->request->input('viewsCount'),
+            );
+        } catch (Throwable) {
+            $this->response->setStatusCode(422);
+            return $this->response;
+        }
 
         $song = ($this->updateSongUseCase)($id, $data);
 
@@ -108,7 +123,7 @@ class DashboardController
 
     public function rejectSong(string $id)
     {
-        ($this->approveSongUseCase)($id);
+        ($this->rejectSongUseCase)($id);
 
         return $this->response;
     }
