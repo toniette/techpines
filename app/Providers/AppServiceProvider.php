@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Domain\Repository\SongMetadataRetriever;
+use App\Domain\Repository\SongRepository;
+use App\Infrastructure\ApiSongMetadataRetriever;
+use App\Infrastructure\Repository\EloquentSongRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +15,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(SongMetadataRetriever::class, ApiSongMetadataRetriever::class);
+        $this->app->bind(SongRepository::class, EloquentSongRepository::class);
     }
 
     /**
