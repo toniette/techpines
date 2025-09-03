@@ -5,7 +5,7 @@ use App\Presentation\Http\Controllers\DashboardController;
 use App\Presentation\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('login', [AuthenticationController::class, 'login']);
+Route::post('login', [AuthenticationController::class, 'login'])->name('login');
 
 Route::prefix('songs')
     ->name('songs.')

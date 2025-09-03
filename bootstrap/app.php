@@ -5,6 +5,7 @@ use App\Domain\Exception\InvalidYoutubeLinkException;
 use App\Domain\Exception\SongAlreadyExistsException;
 use App\Domain\Exception\SongNotFoundException;
 use App\Domain\State\InvalidTransitionException;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -34,6 +35,10 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $exceptions->render(function (InvalidYoutubeLinkException $e) {
             return response()->json([], 422);
+        });
+
+        $exceptions->render(function (AuthenticationException $e) {
+            return response()->json([], 401);
         });
 
         $exceptions->render(function (Throwable $e) {

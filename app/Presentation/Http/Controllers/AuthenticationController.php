@@ -19,7 +19,6 @@ class AuthenticationController
     {
         $credentials = $this->request->only('email', 'password');
         if (!Auth::attempt($credentials)) {
-            $this->response->setContent(['message' => 'Unauthorized']);
             $this->response->setStatusCode(401);
             return $this->response;
         }

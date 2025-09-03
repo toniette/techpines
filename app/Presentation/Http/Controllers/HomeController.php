@@ -23,10 +23,15 @@ class HomeController
 
     public function listSongs(): JsonResponse
     {
-        $songs = ($this->rankSongsUseCase)(
-            $this->request->integer('page', 1),
-            $this->request->integer('per_page', 10)
-        );
+        $page = $this->request->integer('page', 1);
+        $perPage = $this->request->integer('per_page', 5);
+
+        if ($page < 1 || $perPage < 1 || $perPage > 20) {
+            $this->response->setStatusCode(422);
+            return $this->response;
+        }
+
+        $songs = ($this->rankSongsUseCase)($page, $perPage);
 
         $responseContent = array_map(
             fn (array $song) => Arr::only($song, ['title', 'thumbnailUrl', 'viewsCount']),

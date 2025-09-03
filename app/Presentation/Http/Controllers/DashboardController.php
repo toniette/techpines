@@ -15,7 +15,6 @@ use App\Domain\Enum\SongFilterableProperty;
 use App\Domain\Enum\SongSortableProperty;
 use App\Domain\Enum\SongSortDirection;
 use App\Domain\ValueObject\YoutubeLink;
-use App\Infrastructure\Models\Song;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use ValueError;
@@ -43,10 +42,10 @@ class DashboardController
             $params = array_filter([
                 'page' => $this->request->integer('page', 1),
                 'perPage' => $this->request->integer('per_page', 10),
-                'sortBy' => SongSortableProperty::from($this->request->input('sort_by')),
-                'direction' => SongSortDirection::from($this->request->input('direction')),
-                'filterBy' => SongFilterableProperty::from($this->request->input('filter_by')),
-                'filterValue' => $this->request->input('filter_value')
+                'sortBy' => SongSortableProperty::tryFrom($this->request->string('sort_by')),
+                'direction' => SongSortDirection::tryFrom($this->request->string('direction')),
+                'filterBy' => SongFilterableProperty::tryFrom($this->request->string('filter_by')),
+                'filterValue' => $this->request->string('filter_value')
             ]);
         } catch (ValueError $e) {
             $this->response->setStatusCode(422);
