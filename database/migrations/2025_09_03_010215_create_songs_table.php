@@ -12,9 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('songs', function (Blueprint $table) {
-            $table->string('id')->primary();
+            $table->string('id', 11)->primary();
             $table->string('title');
             $table->integer('views_count')->default(0);
+            $table->string('thumbnail_url');
             $table->string('status');
 
             $table->timestamps();

@@ -29,6 +29,7 @@ class SuggestSong
             id: $link->id(),
             title: $metadata->title,
             viewsCount: $metadata->viewsCount,
+            thumbnailUrl: $metadata->thumbnailUrl,
         );
 
         $this->songRepository->save($song);

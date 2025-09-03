@@ -36,6 +36,7 @@ class ApiSongMetadataRetriever implements SongMetadataRetriever
             title: (string) data_get($video, 'snippet.title', 'Unknown Title'),
             thumbnailUrl: (string) data_get($video, 'snippet.thumbnails.high.url', ''),
             viewsCount: (int) data_get($video, 'statistics.viewCount', 0),
+            id: $link->id(),
         );
     }
 }

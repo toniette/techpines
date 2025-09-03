@@ -4,9 +4,11 @@ namespace App\Presentation\Http\Controllers;
 
 use App\Application\UseCase\Public\RankSongs;
 use App\Application\UseCase\Public\SuggestSong;
+use App\Domain\Entity\Song;
 use App\Domain\ValueObject\YoutubeLink;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class HomeController
 {
@@ -26,14 +28,22 @@ class HomeController
             $this->request->integer('per_page', 10)
         );
 
-        $this->response->setData($songs->toArray());
+        $responseContent = array_map(
+            fn (array $song) => Arr::only($song, ['title', 'thumbnailUrl', 'viewsCount']),
+            $songs->toArray()
+        );
+
+        $this->response->setData($responseContent);
         return $this->response;
     }
 
     public function suggestSong(): JsonResponse
     {
-        $link = new YoutubeLink($this->request->input('link'));
-        ($this->suggestSongUseCase)($link);
+        $link = new YoutubeLink($this->request->string('link'));
+
+        app()->terminating(
+            fn () => ($this->suggestSongUseCase)($link)
+        );
 
         return $this->response;
     }

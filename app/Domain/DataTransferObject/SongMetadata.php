@@ -8,6 +8,7 @@ readonly class SongMetadata
         public string  $title,
         public ?string $thumbnailUrl = null,
         public int     $viewsCount = 0,
+        public ?string  $id = null,
     )
     {
     }

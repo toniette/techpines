@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Domain\Entity\User;
 use App\Domain\Repository\SongMetadataRetriever;
 use App\Domain\Repository\SongRepository;
 use App\Infrastructure\ApiSongMetadataRetriever;
@@ -17,6 +18,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(SongMetadataRetriever::class, ApiSongMetadataRetriever::class);
         $this->app->bind(SongRepository::class, EloquentSongRepository::class);
+        $this->app->bind(User::class, fn () => auth()->id() ? new User(auth()->id()) : null);
     }
 
     /**

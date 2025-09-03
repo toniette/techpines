@@ -2,31 +2,37 @@
 
 namespace App\Domain\ValueObject;
 
-use InvalidArgumentException;
+use App\Domain\Exception\InvalidYoutubeLinkException;
 use Stringable;
 
 readonly class YoutubeLink implements Stringable
 {
+    private ?string $id;
+
     public function __construct(
         private string $url
     )
     {
-        // Validate the URL format
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            throw new InvalidArgumentException("Invalid URL format");
+            throw new InvalidYoutubeLinkException("Invalid URL format");
         }
 
-        $pattern = '/^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)[^&]+/';
-        if (!preg_match($pattern, $url)) {
-            throw new InvalidArgumentException("URL is not a valid YouTube link");
+        $pattern = '/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([A-Za-z0-9_-]{11})/';
+        if (!preg_match($pattern, $url, $matches)) {
+            throw new InvalidYoutubeLinkException("URL is not a valid YouTube link");
         }
+
+        $this->id = $matches[1];
     }
 
     public function id(): string
     {
-        // Extract the video ID from the YouTube URL
-        parse_str(parse_url($this->url, PHP_URL_QUERY), $queryParams);
-        return $queryParams['v'] ?? '';
+        return $this->id;
+    }
+
+    public function url(): string
+    {
+        return $this->url;
     }
 
     public function __toString(): string

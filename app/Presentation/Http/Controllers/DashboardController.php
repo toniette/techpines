@@ -2,40 +2,115 @@
 
 namespace App\Presentation\Http\Controllers;
 
+use App\Application\UseCase\Protected\AddSong;
+use App\Application\UseCase\Protected\ApproveSong;
+use App\Application\UseCase\Protected\DeleteSong;
+use App\Application\UseCase\Protected\ListSongs;
+use App\Application\UseCase\Protected\ReadSong;
+use App\Application\UseCase\Protected\RejectSong;
+use App\Application\UseCase\Protected\UpdateSong;
+use App\Domain\DataTransferObject\SongMetadata;
+use App\Domain\Entity\User;
+use App\Domain\Enum\SongFilterableProperty;
+use App\Domain\Enum\SongSortableProperty;
+use App\Domain\Enum\SongSortDirection;
+use App\Domain\ValueObject\YoutubeLink;
+use App\Infrastructure\Models\Song;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use ValueError;
 
 class DashboardController
 {
     public function __construct(
         protected Request $request,
-        protected Response $response
+        protected Response $response,
+        protected User $user,
+        protected ListSongs $listSongsUseCase,
+        protected ReadSong $readSongUseCase,
+        protected AddSong $addSongUseCase,
+        protected UpdateSong $updateSongUseCase,
+        protected DeleteSong $deleteSongUseCase,
+        protected ApproveSong $approveSongUseCase,
+        protected RejectSong $rejectSongUseCase,
     )
     {
     }
 
     public function listSongs()
     {
-        return $this->response->json();
+        try {
+            $params = array_filter([
+                'page' => $this->request->integer('page', 1),
+                'perPage' => $this->request->integer('per_page', 10),
+                'sortBy' => SongSortableProperty::from($this->request->input('sort_by')),
+                'direction' => SongSortDirection::from($this->request->input('direction')),
+                'filterBy' => SongFilterableProperty::from($this->request->input('filter_by')),
+                'filterValue' => $this->request->input('filter_value')
+            ]);
+        } catch (ValueError $e) {
+            $this->response->setStatusCode(422);
+            return $this->response;
+        }
+
+        $songs = ($this->listSongsUseCase)(...$params);
+
+        $this->response->setContent($songs->toArray());
+        return $this->response;
     }
 
-    public function showSong()
+    public function showSong(string $id)
     {
-        return $this->response->json();
+        $song = ($this->readSongUseCase)($id);
+
+        $this->response->setContent($song->toArray());
+        return $this->response;
     }
 
-    public function createSong()
+    public function addSong()
     {
-        return $this->response->json();
+        $link = new YoutubeLink($this->request->input('link'));
+
+        $song = ($this->addSongUseCase)($link);
+
+        $this->response->setStatusCode(201);
+        $this->response->setContent($song->toArray());
+        return $this->response;
     }
 
-    public function updateSong()
+    public function updateSong(string $id)
     {
-        return $this->response->json();
+        $data = new SongMetadata(
+            title: $this->request->input('title'),
+            thumbnailUrl: $this->request->input('thumbnail_url'),
+            viewsCount: $this->request->integer('views_count'),
+        );
+
+        $song = ($this->updateSongUseCase)($id, $data);
+
+        $this->response->setContent($song->toArray());
+        return $this->response;
     }
 
-    public function deleteSong()
+    public function deleteSong(string $id)
     {
-        return $this->response->json();
+        ($this->deleteSongUseCase)($id);
+
+        $this->response->setStatusCode(204);
+        return $this->response;
+    }
+
+    public function approveSong(string $id)
+    {
+        ($this->approveSongUseCase)($id);
+
+        return $this->response;
+    }
+
+    public function rejectSong(string $id)
+    {
+        ($this->approveSongUseCase)($id);
+
+        return $this->response;
     }
 }

@@ -7,4 +7,9 @@ use App\Domain\Entity\Song;
 class SongCollection extends Collection
 {
     protected null|string $type = Song::class;
+
+    public function toArray(): array
+    {
+        return array_map(fn (Song $song) => $song->toArray(), iterator_to_array($this));
+    }
 }

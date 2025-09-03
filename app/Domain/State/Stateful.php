@@ -2,11 +2,9 @@
 
 namespace App\Domain\State;
 
-use BadMethodCallException;
 use Exception;
 use ReflectionClass;
 use ReflectionEnum;
-use ReflectionException;
 use ReflectionProperty;
 
 trait Stateful
@@ -26,9 +24,6 @@ trait Stateful
         throw new Exception("Property $name is not a accessible.");
     }
 
-    /**
-     * @throws ReflectionException
-     */
     final public function __call(string $name, array $arguments): State
     {
         $reflection = new ReflectionClass($this);
@@ -39,7 +34,7 @@ trait Stateful
         );
 
         if (empty(static::$stateProperties)) {
-            throw new BadMethodCallException("No state properties found in " . static::class);
+            throw new InvalidTransitionException("No state properties found in " . static::class);
         }
 
         foreach (static::$stateProperties as $property) {
@@ -54,7 +49,7 @@ trait Stateful
             }
 
             if (count($stateAttributes) > 1) {
-                throw new BadMethodCallException(
+                throw new InvalidTransitionException(
                     "Multiple TransitionCollection attributes found in " . static::class
                 );
             }
@@ -70,13 +65,13 @@ trait Stateful
         }
 
         if (empty($availableTransitions)) {
-            throw new BadMethodCallException(
+            throw new InvalidTransitionException(
                 "The $name transition is not available for " . static::class
             );
         }
 
         if (count($availableTransitions) > 1) {
-            throw new BadMethodCallException(
+            throw new InvalidTransitionException(
                 "Multiple available transitions with name $name found in " . static::class
             );
         }
