@@ -1,9 +1,5 @@
 <?php
 
-use App\Domain\Enum\SongStatus;
-use App\Infrastructure\Models\Song;
-use App\Infrastructure\Models\User;
-
 test('providing a valid url results in a suggestion', function (string $url, string $id) {
     $response = $this->post(
         route('songs.suggest'),
