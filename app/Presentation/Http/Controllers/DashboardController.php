@@ -11,15 +11,14 @@ use App\Application\UseCase\Protected\RejectSong;
 use App\Application\UseCase\Protected\UpdateSong;
 use App\Domain\DataTransferObject\SongMetadata;
 use App\Domain\Entity\User;
-use App\Domain\Enum\SongFilterableProperty;
-use App\Domain\Enum\SongSortableProperty;
-use App\Domain\Enum\SongSortDirection;
-use App\Domain\Exception\InvalidSongDataException;
 use App\Domain\ValueObject\YoutubeLink;
+use App\Presentation\Http\Request\AddSongRequest;
+use App\Presentation\Http\Request\ListSongsRequest;
+use App\Presentation\Http\Response\ListSongsResponse;
+use App\Presentation\Http\Response\SongResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Throwable;
-use ValueError;
 
 class DashboardController
 {
@@ -36,35 +35,22 @@ class DashboardController
         protected RejectSong $rejectSongUseCase,
     )
     {
+        $this->response->setContent([]);
     }
 
-    public function listSongs()
+    public function listSongs(ListSongsRequest $input)
     {
-        try {
-            $page = $this->request->integer('page', 1);
-            $perPage = $this->request->integer('perPage', 10);
+        $songs = ($this->listSongsUseCase)(
+            page: $input->page,
+            perPage: $input->perPage,
+            sortBy: $input->sortBy,
+            direction: $input->direction,
+            filterBy: $input->filterBy,
+            filterValue: $input->filterValue,
+        );
 
-            if ($page < 1 || $perPage < 1 || $perPage > 50) {
-                $this->response->setStatusCode(422);
-                return $this->response;
-            }
-
-            $params = array_filter([
-                'page' => $page,
-                'perPage' => $perPage,
-                'sortBy' => SongSortableProperty::tryFrom($this->request->string('sortBy')),
-                'direction' => SongSortDirection::tryFrom($this->request->string('direction')),
-                'filterBy' => SongFilterableProperty::tryFrom($this->request->string('filterBy')),
-                'filterValue' => $this->request->string('filterValue')
-            ]);
-        } catch (ValueError $e) {
-            $this->response->setStatusCode(422);
-            return $this->response;
-        }
-
-        $songs = ($this->listSongsUseCase)(...$params);
-
-        $this->response->setContent($songs->toArray());
+        $output = ListSongsResponse::collect($songs->toArray());
+        $this->response->setContent($output);
         return $this->response;
     }
 
@@ -72,18 +58,20 @@ class DashboardController
     {
         $song = ($this->readSongUseCase)($id);
 
-        $this->response->setContent($song->toArray());
+        $output = SongResponse::from($song->toArray());
+        $this->response->setContent($output);
         return $this->response;
     }
 
-    public function addSong()
+    public function addSong(AddSongRequest $input)
     {
-        $link = new YoutubeLink($this->request->string('link'));
+        $link = new YoutubeLink($input->link);
 
         $song = ($this->addSongUseCase)($link);
 
         $this->response->setStatusCode(201);
-        $this->response->setContent($song->toArray());
+        $output = SongResponse::from($song->toArray());
+        $this->response->setContent($output);
         return $this->response;
     }
 
@@ -102,7 +90,8 @@ class DashboardController
 
         $song = ($this->updateSongUseCase)($id, $data);
 
-        $this->response->setContent($song->toArray());
+        $output = SongResponse::from($song->toArray());
+        $this->response->setContent($output);
         return $this->response;
     }
 

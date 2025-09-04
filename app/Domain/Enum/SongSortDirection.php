@@ -4,6 +4,6 @@ namespace App\Domain\Enum;
 
 enum SongSortDirection: string
 {
-    case ASC = 'ASC';
-    case DESC = 'DESC';
+    case ASC = 'asc';
+    case DESC = 'desc';
 }

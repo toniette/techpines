@@ -14,7 +14,7 @@ test('can list a page of approved songs as a ranking', function () {
     ]);
 
     $response = $this->get(
-        route('songs.list', ['page' => 1, 'per_page' => 15])
+        route('songs.list', ['page' => 1, 'perPage' => 15])
     );
 
     $response->assertStatus(200);
@@ -40,7 +40,7 @@ test('requesting a page beyond the available songs returns an empty array', func
     ]);
 
     $response = $this->get(
-        route('songs.list', ['page' => $page, 'per_page' => $perPage])
+        route('songs.list', ['page' => $page, 'perPage' => $perPage])
     );
 
     $response->assertStatus(200);
@@ -53,7 +53,7 @@ test('requesting a page beyond the available songs returns an empty array', func
 
 test('requesting a page with invalid page or perPage values returns a 422', function ($page, $perPage) {
     $response = $this->get(
-        route('songs.list', ['page' => $page, 'per_page' => $perPage])
+        route('songs.list', ['page' => $page, 'perPage' => $perPage])
     );
 
     $response->assertStatus(422);

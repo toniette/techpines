@@ -4,11 +4,11 @@ namespace App\Presentation\Http\Controllers;
 
 use App\Application\UseCase\Public\RankSongs;
 use App\Application\UseCase\Public\SuggestSong;
-use App\Domain\Entity\Song;
 use App\Domain\ValueObject\YoutubeLink;
+use App\Presentation\Http\Request\RankSongsRequest;
+use App\Presentation\Http\Response\RankSongsResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 
 class HomeController
 {
@@ -21,24 +21,13 @@ class HomeController
     {
     }
 
-    public function listSongs(): JsonResponse
+    public function rankSongs(RankSongsRequest $input): JsonResponse
     {
-        $page = $this->request->integer('page', 1);
-        $perPage = $this->request->integer('per_page', 5);
+        $songs = ($this->rankSongsUseCase)($input->page, $input->perPage);
 
-        if ($page < 1 || $perPage < 1 || $perPage > 20) {
-            $this->response->setStatusCode(422);
-            return $this->response;
-        }
+        $output = RankSongsResponse::collect($songs->toArray());
 
-        $songs = ($this->rankSongsUseCase)($page, $perPage);
-
-        $responseContent = array_map(
-            fn (array $song) => Arr::only($song, ['title', 'thumbnailUrl', 'viewsCount']),
-            $songs->toArray()
-        );
-
-        $this->response->setData($responseContent);
+        $this->response->setData($output);
         return $this->response;
     }
 

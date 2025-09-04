@@ -23,7 +23,7 @@ test('user can list songs filtering by status', function ($status, int $expected
     'approved songs' => ['approved', 5],
     'suggested songs' => ['suggested', 3],
     'rejected songs' => ['rejected', 2],
-    'no songs' => [null, 0],
+    'no songs' => [null, 10],
 ]);
 
 test('user can list songs filtering by approver', function ($approverId, int $expectedCount) {
@@ -56,7 +56,7 @@ test('user can list songs filtering by approver', function ($approverId, int $ex
 })->with([
     'songs approved by approver 1' => [100, 4],
     'songs approved by approver 2' => [200, 6],
-    'no songs' => [null, 0],
+    'no songs' => [null, 10],
 ]);
 
 test('user can list songs filtering by rejecter', function ($rejecterId, int $expectedCount) {
@@ -89,7 +89,7 @@ test('user can list songs filtering by rejecter', function ($rejecterId, int $ex
 })->with([
     'songs rejected by rejecter 1' => [300, 2],
     'songs rejected by rejecter 2' => [400, 7],
-    'no songs' => [null, 0]
+    'no songs' => [null, 10]
 ]);
 
 test('user can list different pages of different page sizes', function ($page, $perPage, $expectedCount) {

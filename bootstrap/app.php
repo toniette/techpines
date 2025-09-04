@@ -1,6 +1,5 @@
 <?php
 
-use App\Domain\Exception\InvalidItemTypeException;
 use App\Domain\Exception\InvalidYoutubeLinkException;
 use App\Domain\Exception\SongAlreadyExistsException;
 use App\Domain\Exception\SongNotFoundException;
@@ -9,6 +8,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -26,30 +26,27 @@ return Application::configure(basePath: dirname(__DIR__))
             return response()->json([], 400);
         });
 
-        $exceptions->render(function (SongNotFoundException $e) {
-            return response()->json([], 404);
-        });
-
-        $exceptions->render(function (SongAlreadyExistsException $e) {
-            return response()->json([], 409);
-        });
-
-        $exceptions->render(function (InvalidYoutubeLinkException $e) {
-            return response()->json([], 422);
-        });
-
         $exceptions->render(function (AuthenticationException $e) {
             return response()->json([], 401);
+        });
+
+        $exceptions->render(function (SongNotFoundException $e) {
+            return response()->json([], 404);
         });
 
         $exceptions->render(function (MethodNotAllowedException $e) {
             return response()->json([], 405);
         });
 
+        $exceptions->render(function (SongAlreadyExistsException $e) {
+            return response()->json([], 409);
+        });
+
+        $exceptions->render(function (InvalidYoutubeLinkException|ValidationException $e) {
+            return response()->json([], 422);
+        });
+
         $exceptions->render(function (Throwable $e) {
-            return response()->json([
-                'message' => $e->getMessage(),
-                'trace' => $e->getTrace(),
-            ], 500);
+            return response()->json([], 500);
         });
     })->create();

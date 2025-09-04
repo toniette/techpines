@@ -2,6 +2,8 @@
 
 namespace App\Presentation\Http\Controllers;
 
+use App\Presentation\Http\Request\LoginRequest;
+use App\Presentation\Http\Response\LoginResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -15,10 +17,9 @@ class AuthenticationController
     {
     }
 
-    public function login()
+    public function login(LoginRequest $input): Response
     {
-        $credentials = $this->request->only('email', 'password');
-        if (!Auth::attempt($credentials)) {
+        if (!Auth::attempt(['email' => $input->email, 'password' => $input->password])) {
             $this->response->setStatusCode(401);
             return $this->response;
         }
@@ -27,7 +28,7 @@ class AuthenticationController
         $token = $user->createToken('auth_token')->plainTextToken;
 
         $this->response->setStatusCode(200);
-        $this->response->setContent(['access_token' => $token, 'token_type' => 'Bearer']);
+        $this->response->setContent(new LoginResponse($token)->toArray());
         return $this->response;
     }
 }

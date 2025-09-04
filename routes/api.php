@@ -10,7 +10,7 @@ Route::post('login', [AuthenticationController::class, 'login'])->name('login');
 Route::prefix('songs')
     ->name('songs.')
     ->group(function () {
-        Route::get('/', [HomeController::class, 'listSongs'])
+        Route::get('/', [HomeController::class, 'rankSongs'])
             ->name('list')
             ->middleware('throttle:60,1');
         Route::post('suggest', [HomeController::class, 'suggestSong'])
