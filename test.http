@@ -1,0 +1,104 @@
+GET http://localhost/api/songs
+Accept: application/json
+Content-Type: application/json
+
+###
+
+POST http://localhost/api/songs/suggest
+Accept: application/json
+Content-Type: application/json
+
+{
+    "link": "https://www.youtube.com/watch?v=WZIGwN-5Ioo"
+}
+
+###
+
+POST http://localhost/api/login
+Accept: application/json
+Content-Type: application/json
+
+{
+    "email": "admin@admin.com",
+    "password": "12345678"
+}
+
+###
+
+GET http://localhost/api/dashboard/songs
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer 1|ImZun4te86KP0b7KpatZGmshuUSjRPZdZKvvN7fgd0d81d91
+
+###
+
+GET http://localhost/api/dashboard/songs?page=1&perPage=2
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer 1|ImZun4te86KP0b7KpatZGmshuUSjRPZdZKvvN7fgd0d81d91
+
+###
+
+GET http://localhost/api/dashboard/songs?filterBy=status&filterValue=rejected
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer 1|ImZun4te86KP0b7KpatZGmshuUSjRPZdZKvvN7fgd0d81d91
+
+###
+
+GET http://localhost/api/dashboard/songs?sortBy=viewsCount&direction=asc
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer 1|ImZun4te86KP0b7KpatZGmshuUSjRPZdZKvvN7fgd0d81d91
+
+###
+
+POST http://localhost/api/dashboard/songs
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer 1|ImZun4te86KP0b7KpatZGmshuUSjRPZdZKvvN7fgd0d81d91
+
+{
+    "link": "https://www.youtube.com/watch?v=_3a33dVV6WA"
+}
+
+###
+
+GET http://localhost/api/dashboard/songs/_3a33dVV6WA
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer 1|ImZun4te86KP0b7KpatZGmshuUSjRPZdZKvvN7fgd0d81d91
+
+###
+
+PATCH http://localhost/api/dashboard/songs/_3a33dVV6WA
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer 1|ImZun4te86KP0b7KpatZGmshuUSjRPZdZKvvN7fgd0d81d91
+
+{
+    "title": "New Title",
+    "thumbnailUrl": "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/free-youtube-thumbnail-maker-online-design-template-b0d0e1050e510fc2784b90d522d5bbe5_screen.jpg",
+    "viewsCount": 100
+}
+
+###
+
+DELETE http://localhost/api/dashboard/songs/_3a33dVV6WA
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer 1|ImZun4te86KP0b7KpatZGmshuUSjRPZdZKvvN7fgd0d81d91
+
+###
+
+PATCH http://localhost/api/dashboard/songs/aVGPLa8iyM4/reject
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer 1|ImZun4te86KP0b7KpatZGmshuUSjRPZdZKvvN7fgd0d81d91
+
+###
+
+PATCH http://localhost/api/dashboard/songs/kJQP7kiw5Fk/approve
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer 1|ImZun4te86KP0b7KpatZGmshuUSjRPZdZKvvN7fgd0d81d91

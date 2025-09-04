@@ -42,7 +42,9 @@ class EloquentSongRepository implements SongRepository
             ]
         );
 
-        return $this->find($song->id);
+        $this->cache->forget(CacheKey::SONG_BY_ID->with($song->id));
+
+        return $this->find($song->id) ?? $song;
     }
 
     public function delete(Song $song): void
@@ -127,7 +129,7 @@ class EloquentSongRepository implements SongRepository
             thumbnailUrl: $model->thumbnail_url,
             createdAt: $model->created_at,
             updatedAt: $model->updated_at,
-            approvedAt: $model->updated_at,
+            approvedAt: $model->approved_at,
             approvedBy: $model->approved_by ? new User(id: $model->approved_by) : null,
             rejectedAt: $model->rejected_at,
             rejectedBy: $model->rejected_by ? new User(id: $model->rejected_by) : null,

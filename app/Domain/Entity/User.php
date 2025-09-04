@@ -14,18 +14,22 @@ class User
     {
     }
 
-    public function approveSong(Song $song): void
+    public function approveSong(Song $song): Song
     {
         $song->approve();
         $song->approvedAt = new DateTimeImmutable();
         $song->approvedBy = $this;
+
+        return $song;
     }
 
-    public function rejectSong(Song $song): void
+    public function rejectSong(Song $song): Song
     {
         $song->reject();
         $song->rejectedAt = new DateTimeImmutable();
         $song->rejectedBy = $this;
+
+        return $song;
     }
 
     public function addSong(SongMetadata $data, bool $approve = false): Song
@@ -53,9 +57,11 @@ class User
         return $song;
     }
 
-    public function deleteSong(Song $song)
+    public function deleteSong(Song $song): Song
     {
         $song->deletedAt = new DateTimeImmutable();
         $song->deletedBy = $this;
+
+        return $song;
     }
 }
