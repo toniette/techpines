@@ -51,7 +51,7 @@ para facilitar o setup do ambiente.
     ```bash
     ./vendor/bin/sail up -d && \
     ./vendor/bin/sail artisan key:generate && \
-    ./vendor/bin/sail artisan migrate
+    ./vendor/bin/sail artisan migrate --seed
    ```
 
 ## Endpoints
@@ -88,6 +88,8 @@ para facilitar o setup do ambiente.
     - Aprova uma sugestão
 - `PATCH /api/dashboard/songs/{id}/reject`
     - Rejeita uma sugestão
+
+_Para exemplos, consulte o arquivo **test.http**_
 
 ### Observações
 
