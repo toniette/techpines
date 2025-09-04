@@ -6,7 +6,7 @@ use App\Domain\Entity\Song;
 
 class SongCollection extends Collection
 {
-    protected null|string $type = Song::class;
+    protected ?string $type = Song::class;
 
     public function toArray(): array
     {

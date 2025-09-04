@@ -15,16 +15,14 @@ class ApiSongMetadataRetriever implements SongMetadataRetriever
     public function __construct(
         protected YoutubeClient $client,
         protected Logger $logger,
-    )
-    {
-    }
+    ) {}
 
     public function retrieve(YoutubeLink $link): SongMetadata
     {
         $data = $this->client->fetchVideoData($link);
-        $video = Arr::first(data_get($data, 'items', []), fn($item) => data_get($item, 'id') === $link->id());
+        $video = Arr::first(data_get($data, 'items', []), fn ($item) => data_get($item, 'id') === $link->id());
 
-        if (!$video) {
+        if (! $video) {
             $this->logger->error(
                 'Video not found in YouTube API response',
                 ['link' => (string) $link, 'response' => $data]

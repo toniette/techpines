@@ -19,8 +19,10 @@ class Song extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $keyType = 'string';
     public $incrementing = false;
+
+    protected $keyType = 'string';
+
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
@@ -44,14 +46,8 @@ class Song extends Model
         'rejected_at',
         'rejected_by',
         'deleted_at',
-        'deleted_by'
+        'deleted_by',
     ];
-
-    #[Scope]
-    protected function approved(Builder $query): void
-    {
-        $query->whereStatus(SongStatus::APPROVED);
-    }
 
     #[Scope]
     protected function rejected(Builder $query): void
@@ -73,7 +69,6 @@ class Song extends Model
             SongSortDirection::DESC => 'desc',
         };
 
-
         $column = match ($property) {
             SongSortableProperty::CREATED_AT => 'created_at',
             SongSortableProperty::APPROVED_AT => 'approved_at',
@@ -89,8 +84,7 @@ class Song extends Model
         Builder $query,
         ?SongFilterableProperty $property = null,
         ?string $value = null
-    ): void
-    {
+    ): void {
         if ($property === null || $value === null) {
             return;
         }
@@ -103,12 +97,6 @@ class Song extends Model
     }
 
     #[Scope]
-    protected function ranking(Builder $query): void
-    {
-        $query->approved()->orderByDesc('views_count')->orderBy('title');
-    }
-
-    #[Scope]
     protected function approvedBy($query, string|int $userId): void
     {
         $query->where('approved_by', $userId);
@@ -118,5 +106,17 @@ class Song extends Model
     protected function rejectedBy($query, string|int $userId): void
     {
         $query->where('rejected_by', $userId);
+    }
+
+    #[Scope]
+    protected function ranking(Builder $query): void
+    {
+        $query->approved()->orderByDesc('views_count')->orderBy('title');
+    }
+
+    #[Scope]
+    protected function approved(Builder $query): void
+    {
+        $query->whereStatus(SongStatus::APPROVED);
     }
 }

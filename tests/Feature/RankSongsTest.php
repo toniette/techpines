@@ -20,7 +20,7 @@ test('can list a page of approved songs as a ranking', function () {
     $response->assertStatus(200);
     $response->assertJsonCount(15);
     $response->assertJsonStructure([
-        '*' => ['title', 'thumbnailUrl', 'viewsCount']
+        '*' => ['title', 'thumbnailUrl', 'viewsCount'],
     ]);
 
     $responseData = $response->json();
@@ -48,7 +48,7 @@ test('requesting a page beyond the available songs returns an empty array', func
 })->with([
     'page 2 with 15 per page' => [2, 15],
     'page 3 with 5 per page' => [3, 5],
-    'page 5 with 3 per page' => [5, 3]
+    'page 5 with 3 per page' => [5, 3],
 ]);
 
 test('requesting a page with invalid page or perPage values returns a 422', function ($page, $perPage) {
@@ -64,5 +64,5 @@ test('requesting a page with invalid page or perPage values returns a 422', func
     'negative per page' => [1, -5],
     'non-integer page' => ['one', 10],
     'non-integer per page' => [1, 'ten'],
-    'exceeding max per page' => [1, 25]
+    'exceeding max per page' => [1, 25],
 ]);

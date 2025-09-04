@@ -38,11 +38,11 @@ test('user can list songs filtering by approver', function ($approverId, int $ex
 
     Song::factory()->count(4)->create([
         'status' => 'approved',
-        'approved_by' => $approver1->id
+        'approved_by' => $approver1->id,
     ]);
     Song::factory()->count(6)->create([
         'status' => 'approved',
-        'approved_by' => $approver2->id
+        'approved_by' => $approver2->id,
     ]);
     Song::factory()->count(5)->create(['approved_by' => null]);
 
@@ -71,11 +71,11 @@ test('user can list songs filtering by rejecter', function ($rejecterId, int $ex
 
     Song::factory()->count(2)->create([
         'status' => 'rejected',
-        'rejected_by' => $rejecter1->id
+        'rejected_by' => $rejecter1->id,
     ]);
     Song::factory()->count(7)->create([
         'status' => 'rejected',
-        'rejected_by' => $rejecter2->id
+        'rejected_by' => $rejecter2->id,
     ]);
     Song::factory()->count(5)->create(['rejected_by' => null]);
 
@@ -89,7 +89,7 @@ test('user can list songs filtering by rejecter', function ($rejecterId, int $ex
 })->with([
     'songs rejected by rejecter 1' => [300, 2],
     'songs rejected by rejecter 2' => [400, 7],
-    'no songs' => [null, 10]
+    'no songs' => [null, 10],
 ]);
 
 test('user can list different pages of different page sizes', function ($page, $perPage, $expectedCount) {
@@ -111,7 +111,7 @@ test('user can list different pages of different page sizes', function ($page, $
     'third page, 10 per page' => [3, 10, 5],
     'first page, 15 per page' => [1, 15, 15],
     'second page, 15 per page' => [2, 15, 10],
-    'first page, 30 per page' => [1, 30, 25]
+    'first page, 30 per page' => [1, 30, 25],
 ]);
 
 test('user cannot list songs using invalid pagination arguments', function ($page, $perPage) {
@@ -154,7 +154,7 @@ test('user can list songs sorting by valid properties on both directions', funct
     $response->assertJsonCount(10);
 
     $songIds = Song::orderBy(Str::snake($property), $direction)->pluck('id')->toArray();
-    $responseIds = array_map(fn($song) => data_get($song, 'id'), $response->json());
+    $responseIds = array_map(fn ($song) => data_get($song, 'id'), $response->json());
 
     $this->assertEquals($songIds, $responseIds);
 })->with([

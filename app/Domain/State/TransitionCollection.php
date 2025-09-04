@@ -12,6 +12,6 @@ class TransitionCollection extends Collection
 
     public function getByName(string $name): ?Transition
     {
-        return array_find(iterator_to_array($this), fn(Transition $transition) => $transition->name === $name);
+        return array_find(iterator_to_array($this), fn (Transition $transition) => $transition->name === $name);
     }
 }

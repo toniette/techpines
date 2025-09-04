@@ -13,14 +13,13 @@ class AuthenticationController
     public function __construct(
         protected Request $request,
         protected Response $response,
-    )
-    {
-    }
+    ) {}
 
     public function login(LoginRequest $input): Response
     {
-        if (!Auth::attempt(['email' => $input->email, 'password' => $input->password])) {
+        if (! Auth::attempt(['email' => $input->email, 'password' => $input->password])) {
             $this->response->setStatusCode(401);
+
             return $this->response;
         }
 
@@ -29,6 +28,7 @@ class AuthenticationController
 
         $this->response->setStatusCode(200);
         $this->response->setContent(new LoginResponse($token)->toArray());
+
         return $this->response;
     }
 }

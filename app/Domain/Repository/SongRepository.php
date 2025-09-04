@@ -17,12 +17,12 @@ interface SongRepository
     public function find(string $id): ?Song;
 
     public function paginate(
-        int                     $page = 1,
-        int                     $perPage = 5,
-        SongSortableProperty    $sortBy = SongSortableProperty::CREATED_AT,
-        SongSortDirection       $direction = SongSortDirection::DESC,
+        int $page = 1,
+        int $perPage = 5,
+        SongSortableProperty $sortBy = SongSortableProperty::CREATED_AT,
+        SongSortDirection $direction = SongSortDirection::DESC,
         ?SongFilterableProperty $filterBy = null,
-        ?string                 $filterValue = null,
+        ?string $filterValue = null,
     ): SongCollection;
 
     public function rank(int $page = 1, int $perPage = 5): SongCollection;

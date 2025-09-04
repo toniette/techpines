@@ -6,6 +6,4 @@ namespace App\Domain\Exception;
 
 use Exception;
 
-class InvalidItemTypeException extends Exception
-{
-}
+class InvalidItemTypeException extends Exception {}

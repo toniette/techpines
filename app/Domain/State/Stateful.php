@@ -9,8 +9,9 @@ use ReflectionProperty;
 
 trait Stateful
 {
+    private static array $stateProperties;
+
     final private function __construct() {}
-    static private array $stateProperties;
 
     /**
      * @throws Exception
@@ -30,11 +31,11 @@ trait Stateful
 
         static::$stateProperties ??= array_filter(
             $reflection->getProperties(),
-            fn(ReflectionProperty $property) => is_subclass_of($property->getType()->getName(), State::class)
+            fn (ReflectionProperty $property) => is_subclass_of($property->getType()->getName(), State::class)
         );
 
         if (empty(static::$stateProperties)) {
-            throw new InvalidTransitionException("No state properties found in " . static::class);
+            throw new InvalidTransitionException('No state properties found in '.static::class);
         }
 
         foreach (static::$stateProperties as $property) {
@@ -50,7 +51,7 @@ trait Stateful
 
             if (count($stateAttributes) > 1) {
                 throw new InvalidTransitionException(
-                    "Multiple TransitionCollection attributes found in " . static::class
+                    'Multiple TransitionCollection attributes found in '.static::class
                 );
             }
 
@@ -66,13 +67,13 @@ trait Stateful
 
         if (empty($availableTransitions)) {
             throw new InvalidTransitionException(
-                "The $name transition is not available for " . static::class
+                "The $name transition is not available for ".static::class
             );
         }
 
         if (count($availableTransitions) > 1) {
             throw new InvalidTransitionException(
-                "Multiple available transitions with name $name found in " . static::class
+                "Multiple available transitions with name $name found in ".static::class
             );
         }
 

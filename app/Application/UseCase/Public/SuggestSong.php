@@ -13,14 +13,12 @@ class SuggestSong
     public function __construct(
         protected SongMetadataRetriever $metadataRetriever,
         protected SongRepository $songRepository,
-    )
-    {
-    }
+    ) {}
 
     public function __invoke(YoutubeLink $link): void
     {
         if ($this->songRepository->find($link->id())) {
-            throw new SongAlreadyExistsException();
+            throw new SongAlreadyExistsException;
         }
 
         $metadata = $this->metadataRetriever->retrieve($link);

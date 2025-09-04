@@ -16,8 +16,7 @@ class YoutubeClient extends PendingRequest
     public function __construct(
         protected Repository $config,
         protected Logger $logger,
-    )
-    {
+    ) {
         parent::__construct();
 
         $this->baseUrl($this->config->get('youtube.api.base_url'));

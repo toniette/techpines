@@ -4,6 +4,4 @@ namespace App\Domain\Exception;
 
 use Exception;
 
-class SongAlreadyExistsException extends Exception
-{
-}
+class SongAlreadyExistsException extends Exception {}

@@ -11,7 +11,6 @@ use Illuminate\Support\Str;
  */
 class SongFactory extends Factory
 {
-
     public function definition(): array
     {
         return [

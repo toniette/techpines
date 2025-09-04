@@ -48,6 +48,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $exceptions->render(function (Throwable $e) {
             dd($e);
+
             return response()->json([], 500);
         });
     })->create();

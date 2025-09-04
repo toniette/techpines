@@ -14,13 +14,11 @@ use Illuminate\Http\Request;
 class HomeController
 {
     public function __construct(
-        protected Request      $request,
+        protected Request $request,
         protected JsonResponse $response,
-        protected SuggestSong  $suggestSongUseCase,
-        protected RankSongs    $rankSongsUseCase,
-    )
-    {
-    }
+        protected SuggestSong $suggestSongUseCase,
+        protected RankSongs $rankSongsUseCase,
+    ) {}
 
     public function rankSongs(RankSongsRequest $input): JsonResponse
     {
@@ -29,6 +27,7 @@ class HomeController
         $output = RankSongsResponse::collect($songs->toArray());
 
         $this->response->setData($output);
+
         return $this->response;
     }
 
@@ -41,6 +40,7 @@ class HomeController
         );
 
         $this->response->setStatusCode(200);
+
         return $this->response;
     }
 }

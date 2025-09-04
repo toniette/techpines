@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Collection;
 
-use SplObjectStorage;
 use App\Domain\Exception\InvalidItemTypeException;
+use SplObjectStorage;
 
 abstract class Collection extends SplObjectStorage
 {
@@ -19,22 +19,27 @@ abstract class Collection extends SplObjectStorage
         $this->attachAll(...$objects);
     }
 
+    public function attachAll(object ...$objects): void
+    {
+        foreach ($objects as $object) {
+            $this->attach($object);
+        }
+    }
+
     public function attach(object $object, mixed $info = null): void
     {
-        if (!$object instanceof $this->type) {
+        if (! $object instanceof $this->type) {
             throw new InvalidItemTypeException(
-                "Object must be an instance of $this->type, " . $object::class . " given"
+                "Object must be an instance of $this->type, ".$object::class.' given'
             );
         }
 
         parent::attach($object, $info);
     }
 
-    public function attachAll(object ...$objects): void
+    public static function from(object ...$objects): static
     {
-        foreach ($objects as $object) {
-            $this->attach($object);
-        }
+        return new static(...$objects);
     }
 
     public function offsetSet($object, $info = null): void
@@ -51,18 +56,13 @@ abstract class Collection extends SplObjectStorage
         return count($storage);
     }
 
-    public static function from(object ...$objects): static
+    public function toJson(): string
     {
-        return new static(...$objects);
+        return json_encode($this->toArray());
     }
 
     public function toArray(): array
     {
         return iterator_to_array($this);
-    }
-
-    public function toJson(): string
-    {
-        return json_encode($this->toArray());
     }
 }

@@ -30,8 +30,7 @@ class Song
         public ?DateTimeInterface $deletedAt = null,
         public ?User $deletedBy = null,
         SongStatus $status = SongStatus::SUGGESTED,
-    )
-    {
+    ) {
         $this->status = $status;
     }
 

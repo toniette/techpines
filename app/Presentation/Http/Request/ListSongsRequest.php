@@ -21,7 +21,5 @@ class ListSongsRequest extends Data
         public SongSortDirection $direction = SongSortDirection::DESC,
         public ?SongFilterableProperty $filterBy = null,
         public ?string $filterValue = null,
-    )
-    {
-    }
+    ) {}
 }

@@ -9,9 +9,7 @@ class RankSongs
 {
     public function __construct(
         protected SongRepository $songRepository,
-    )
-    {
-    }
+    ) {}
 
     public function __invoke(int $page, int $perPage): SongCollection
     {

@@ -13,16 +13,14 @@ class UpdateSong
     public function __construct(
         protected SongRepository $songRepository,
         protected User $user,
-    )
-    {
-    }
+    ) {}
 
     public function __invoke(string $songId, SongMetadata $metadata): Song
     {
         $song = $this->songRepository->find($songId);
 
-        if (!$song) {
-            throw new SongNotFoundException("Song not found");
+        if (! $song) {
+            throw new SongNotFoundException('Song not found');
         }
 
         $this->user->updateSong($song, $metadata);

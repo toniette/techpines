@@ -11,14 +11,12 @@ class ApproveSong
     public function __construct(
         protected SongRepository $songRepository,
         protected User $user,
-    )
-    {
-    }
+    ) {}
 
     public function __invoke(string $songId): void
     {
         $song = $this->songRepository->find($songId);
-        if (!$song) {
+        if (! $song) {
             throw new SongNotFoundException('Song not found');
         }
 

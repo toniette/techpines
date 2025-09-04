@@ -33,8 +33,7 @@ class DashboardController
         protected DeleteSong $deleteSongUseCase,
         protected ApproveSong $approveSongUseCase,
         protected RejectSong $rejectSongUseCase,
-    )
-    {
+    ) {
         $this->response->setContent([]);
     }
 
@@ -51,6 +50,7 @@ class DashboardController
 
         $output = ListSongsResponse::collect($songs->toArray());
         $this->response->setContent($output);
+
         return $this->response;
     }
 
@@ -60,6 +60,7 @@ class DashboardController
 
         $output = SongResponse::from($song->toArray());
         $this->response->setContent($output);
+
         return $this->response;
     }
 
@@ -72,6 +73,7 @@ class DashboardController
         $this->response->setStatusCode(201);
         $output = SongResponse::from($song->toArray());
         $this->response->setContent($output);
+
         return $this->response;
     }
 
@@ -85,6 +87,7 @@ class DashboardController
             );
         } catch (Throwable) {
             $this->response->setStatusCode(422);
+
             return $this->response;
         }
 
@@ -92,6 +95,7 @@ class DashboardController
 
         $output = SongResponse::from($song->toArray());
         $this->response->setContent($output);
+
         return $this->response;
     }
 
@@ -100,6 +104,7 @@ class DashboardController
         ($this->deleteSongUseCase)($id);
 
         $this->response->setStatusCode(204);
+
         return $this->response;
     }
 

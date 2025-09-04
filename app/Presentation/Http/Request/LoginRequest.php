@@ -11,7 +11,5 @@ class LoginRequest extends Data
         #[Email]
         public string $email,
         public string $password,
-    )
-    {
-    }
+    ) {}
 }

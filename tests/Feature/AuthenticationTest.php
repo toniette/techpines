@@ -22,7 +22,7 @@ test('user can get a token if using valid credentials', function (string $email,
     $response->assertStatus(200);
     $response->assertJsonStructure(['access_token', 'token_type']);
 })->with([
-    ['admin@admin.com', '12345678']
+    ['admin@admin.com', '12345678'],
 ]);
 
 test('user cannot get a token if using invalid credentials', function (string $email, string $password) {
@@ -40,7 +40,7 @@ test('user cannot get a token if using invalid credentials', function (string $e
 })->with([
     'valid email, wrong password' => ['admin@admin.com', 'wrongPassword'],
     'wrong email, valid password' => ['wrong@email.com', 'validPassword123'],
-    'wrong email, wrong password' => ['wrong@email.com', 'wrongPassword']
+    'wrong email, wrong password' => ['wrong@email.com', 'wrongPassword'],
 ]);
 
 test('authenticated users can access a protected route', function () {
@@ -50,7 +50,7 @@ test('authenticated users can access a protected route', function () {
     $token = $user->createToken('auth_token')->plainTextToken;
 
     $response = $this
-        ->withHeaders(['Authorization' => 'Bearer ' . $token])
+        ->withHeaders(['Authorization' => 'Bearer '.$token])
         ->get(route('dashboard.songs.list'));
 
     $response->assertStatus(200);

@@ -6,6 +6,4 @@ namespace App\Domain\Exception;
 
 use Exception;
 
-class InvalidSongDataException extends Exception
-{
-}
+class InvalidSongDataException extends Exception {}

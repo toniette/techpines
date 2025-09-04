@@ -15,14 +15,12 @@ class AddSong
         protected SongMetadataRetriever $metadataRetriever,
         protected SongRepository $songRepository,
         protected User $user,
-    )
-    {
-    }
+    ) {}
 
     public function __invoke(YoutubeLink $link, bool $approve = false): Song
     {
         if ($this->songRepository->find($link->id())) {
-            throw new SongAlreadyExistsException();
+            throw new SongAlreadyExistsException;
         }
 
         $metadata = $this->metadataRetriever->retrieve($link);
