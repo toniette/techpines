@@ -16,7 +16,7 @@ class SongFactory extends Factory
         return [
             'id' => Str::random(11),
             'title' => $this->faker->sentence(3),
-            'thumbnail_url' => $this->faker->imageUrl(),
+            'thumbnail_url' => 'https://picsum.photos/640/480?random=' . $this->faker->numberBetween(1, 1000),
             'views_count' => $this->faker->numberBetween(0, 1000000),
             'status' => SongStatus::SUGGESTED->value,
             'created_at' => now(),
