@@ -102,5 +102,5 @@ _Para exemplos, consulte o arquivo **test.http**_
 Para rodar os testes:
 
 ```
-./vendor/bin/sail test --coverage
+./vendor/bin/sail artisan test --coverage
 ```
