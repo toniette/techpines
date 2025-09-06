@@ -123,7 +123,7 @@ class EloquentSongRepository implements SongRepository
         /** @var LengthAwarePaginator $songs */
         $songs = $this->cache->remember(
             key: $cacheKey,
-            ttl: new DateInterval('PT10M'),
+            ttl: new DateInterval('PT1M'),
             callback: fn () => $this->model
                 ->filteredBy($filterBy, $filterValue)
                 ->sortedBy($sortBy, $direction)
